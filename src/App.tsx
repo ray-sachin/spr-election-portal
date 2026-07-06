@@ -1,14 +1,15 @@
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, Link } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { ElectionProvider } from './contexts/ElectionContext';
-import Login from './pages/Login';
-import Dashboard from './pages/Dashboard';
-import Nominate from './pages/Nominate';
-import Vote from './pages/Vote';
-import Results from './pages/Results';
-import Admin from './pages/Admin';
 import nitukLogo from './assets/nituk_logo.svg';
+
+const Login = lazy(() => import('./pages/Login'));
+const Dashboard = lazy(() => import('./pages/Dashboard'));
+const Nominate = lazy(() => import('./pages/Nominate'));
+const Vote = lazy(() => import('./pages/Vote'));
+const Results = lazy(() => import('./pages/Results'));
+const Admin = lazy(() => import('./pages/Admin'));
 
 // Navigation & Logo Header Layout
 const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -108,64 +109,66 @@ export const App: React.FC = () => {
       <AuthProvider>
         <ElectionProvider>
           <AppLayout>
-            <Routes>
-              {/* Public Authenticating Route */}
-              <Route
-                path="/login"
-                element={
-                  <PublicRoute>
-                    <Login />
-                  </PublicRoute>
-                }
-              />
+            <Suspense fallback={<div className="mono-data" style={{ padding: '3rem', textAlign: 'center', flexGrow: 1 }}>Loading election view...</div>}>
+              <Routes>
+                {/* Public Authenticating Route */}
+                <Route
+                  path="/login"
+                  element={
+                    <PublicRoute>
+                      <Login />
+                    </PublicRoute>
+                  }
+                />
 
-              {/* Private Voter Routes */}
-              <Route
-                path="/"
-                element={
-                  <ProtectedRoute>
-                    <Dashboard />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/nominate"
-                element={
-                  <ProtectedRoute>
-                    <Nominate />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/vote"
-                element={
-                  <ProtectedRoute>
-                    <Vote />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/results"
-                element={
-                  <ProtectedRoute>
-                    <Results />
-                  </ProtectedRoute>
-                }
-              />
+                {/* Private Voter Routes */}
+                <Route
+                  path="/"
+                  element={
+                    <ProtectedRoute>
+                      <Dashboard />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/nominate"
+                  element={
+                    <ProtectedRoute>
+                      <Nominate />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/vote"
+                  element={
+                    <ProtectedRoute>
+                      <Vote />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/results"
+                  element={
+                    <ProtectedRoute>
+                      <Results />
+                    </ProtectedRoute>
+                  }
+                />
 
-              {/* Private Administrative Route */}
-              <Route
-                path="/admin"
-                element={
-                  <ProtectedRoute adminOnly>
-                    <Admin />
-                  </ProtectedRoute>
-                }
-              />
+                {/* Private Administrative Route */}
+                <Route
+                  path="/admin"
+                  element={
+                    <ProtectedRoute adminOnly>
+                      <Admin />
+                    </ProtectedRoute>
+                  }
+                />
 
-              {/* Fallback Redirection */}
-              <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
+                {/* Fallback Redirection */}
+                <Route path="*" element={<Navigate to="/" replace />} />
+              </Routes>
+            </Suspense>
           </AppLayout>
         </ElectionProvider>
       </AuthProvider>

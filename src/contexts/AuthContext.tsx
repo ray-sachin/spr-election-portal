@@ -43,7 +43,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [session, setSession] = useState<Session | null>(null);
   const [student, setStudent] = useState<StudentProfile | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setErrorState] = useState<string | null>(null);
+
+  const setError = (msg: string | null) => {
+    if (msg && msg.includes('Database error saving new user')) {
+      setErrorState('Please try logging in using your official college email ID (@nituk.ac.in). Only registered student emails are permitted.');
+    } else {
+      setErrorState(msg);
+    }
+  };
 
   // Helper to extract roll number from email
   const getRollNumberFromEmail = (email: string): string | null => {
