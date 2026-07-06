@@ -1,0 +1,843 @@
+/* ====================================================================
+   NIT Uttarakhand SPR Election Portal — Styling System
+   Theme: Official Register (Paper, Ink, & Stamped Seal)
+   ==================================================================== */
+
+:root {
+  /* Color Palette */
+  --paper: #F7F7F4;
+  --ink: #14213D;
+  --register: #C9C7BE;
+  --seal: #8C2F1B;
+  --verified: #2F4B3C;
+  --muted: #6B6B63;
+  --hover-bg: #EAEAE3;
+  --error-bg: #FBEBE8;
+  --error-border: #D64527;
+
+  /* Typography Fallbacks */
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-sans: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: 'IBM Plex Mono', "Courier New", Courier, monospace;
+
+  /* Borders & Radius */
+  --border-width: 1px;
+  --border-double-width: 3px;
+  --border-radius: 2px;
+}
+
+/* Reset & Base Styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: #E2E1D8; /* Desktop background simulating a physical desk surface */
+  color: var(--ink);
+  font-family: var(--font-sans);
+  line-height: 1.5;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Layout */
+.app-container {
+  max-width: 680px;
+  margin: 3rem auto;
+  padding: 3rem 2.5rem;
+  background-color: var(--paper);
+  border: var(--border-double-width) double var(--ink); /* Double border matching official paper certificate style */
+  box-shadow: 8px 8px 0px rgba(20, 33, 61, 0.15); /* Solid paper drop shadow */
+  min-height: calc(100vh - 6rem);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Headers & Branding */
+header.app-header {
+  border-bottom: var(--border-double-width) double var(--ink);
+  padding-bottom: 1.5rem;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.app-branding {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: var(--ink);
+  text-decoration: none;
+  display: inline-block;
+  margin-bottom: 0.5rem;
+}
+
+.app-subbranding {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+/* Typography Helpers */
+.display-title {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 600;
+  font-size: 1.75rem;
+  color: var(--ink);
+}
+
+.mono-data {
+  font-family: var(--font-mono);
+  font-weight: 500;
+}
+
+.muted-text {
+  color: var(--muted);
+}
+
+/* Phase Tracker Stepper */
+.phase-tracker {
+  display: flex;
+  justify-content: space-between;
+  border: var(--border-width) solid var(--ink);
+  background-color: var(--paper);
+  margin-bottom: 2.5rem;
+  padding: 0.75rem 0.5rem;
+  gap: 0.5rem;
+}
+
+.phase-step {
+  flex: 1;
+  text-align: center;
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.phase-step:not(:last-child)::after {
+  content: "→";
+  position: absolute;
+  right: -5px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--register);
+  font-family: var(--font-mono);
+  font-size: 1rem;
+}
+
+.phase-step.active {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.phase-step.active .step-number {
+  border-bottom: 2px solid var(--ink);
+}
+
+.phase-step.clickable {
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.phase-step.clickable:hover .step-label {
+  text-decoration: underline;
+  color: var(--ink);
+}
+
+.phase-step .step-number {
+  font-family: var(--font-mono);
+  margin-bottom: 0.2rem;
+  display: inline-block;
+}
+
+@media (max-width: 520px) {
+  .phase-tracker {
+    padding: 0.5rem 0.25rem;
+    gap: 0.25rem;
+  }
+  .phase-step {
+    font-size: 0.6rem;
+    letter-spacing: 0;
+  }
+  .phase-step:not(:last-child)::after {
+    display: none; /* Hide absolute arrow overlays on small screens to prevent clipping */
+  }
+}
+
+/* Phase Banners */
+.phase-banner {
+  text-align: center;
+  background-color: var(--ink);
+  color: var(--paper);
+  padding: 1.25rem;
+  margin-bottom: 2rem;
+  border-radius: var(--border-radius);
+}
+
+.phase-banner h2 {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 1.5rem;
+}
+
+/* Forms & Inputs */
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+  color: var(--ink);
+}
+
+.input-field {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: var(--paper);
+  border: var(--border-width) solid var(--ink);
+  border-radius: var(--border-radius);
+  font-family: var(--font-sans);
+  color: var(--ink);
+  font-size: 1rem;
+  transition: background-color 0.15s ease;
+}
+
+.input-field:focus {
+  outline: none;
+  background-color: var(--hover-bg);
+}
+
+.input-field.mono {
+  font-family: var(--font-mono);
+}
+
+textarea.input-field {
+  min-height: 120px;
+  resize: vertical;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.5rem;
+  background-color: var(--ink);
+  color: var(--paper);
+  border: var(--border-width) solid var(--ink);
+  border-radius: var(--border-radius);
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-decoration: none;
+}
+
+.btn:hover:not(:disabled) {
+  background-color: var(--paper);
+  color: var(--ink);
+}
+
+.btn:disabled {
+  background-color: var(--register);
+  border-color: var(--register);
+  color: var(--muted);
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  background-color: var(--paper);
+  color: var(--ink);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background-color: var(--hover-bg);
+}
+
+.btn-danger {
+  background-color: var(--paper);
+  border-color: var(--seal);
+  color: var(--seal);
+}
+
+.btn-danger:hover:not(:disabled) {
+  background-color: var(--seal);
+  color: var(--paper);
+}
+
+/* Register Table (The Register Row Layout) */
+.register-table {
+  border-top: var(--border-double-width) double var(--ink);
+  margin-top: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.register-row {
+  display: flex;
+  align-items: center;
+  padding: 1rem 0;
+  border-bottom: var(--border-width) solid var(--register);
+}
+
+.register-row:last-child {
+  border-bottom: var(--border-double-width) double var(--ink);
+}
+
+.register-badge {
+  flex-shrink: 0;
+  width: 110px;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.register-content {
+  flex-grow: 1;
+  padding: 0 1rem;
+}
+
+.register-name {
+  font-weight: 600;
+  font-size: 1.05rem;
+}
+
+.register-meta {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.register-action {
+  flex-shrink: 0;
+  text-align: right;
+}
+
+/* Status Pills */
+.status-pill {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  font-weight: 600;
+  border: var(--border-width) solid var(--muted);
+  color: var(--muted);
+  border-radius: var(--border-radius);
+}
+
+.status-pill.approved {
+  border-color: var(--verified);
+  color: var(--verified);
+  background-color: rgba(47, 75, 60, 0.05);
+}
+
+.status-pill.pending {
+  border-color: var(--ink);
+  color: var(--ink);
+}
+
+.status-pill.rejected {
+  border-color: var(--seal);
+  color: var(--seal);
+  background-color: rgba(140, 47, 27, 0.05);
+}
+
+/* Ballot Card Checklist Style */
+.ballot-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.ballot-row {
+  display: flex;
+  align-items: flex-start;
+  padding: 1.25rem 0;
+  border-bottom: var(--border-width) solid var(--register);
+}
+
+.ballot-row:last-child {
+  border-bottom: var(--border-double-width) double var(--ink);
+}
+
+.ballot-selection {
+  flex-shrink: 0;
+  padding-top: 0.25rem;
+  margin-right: 1rem;
+}
+
+.ballot-checkbox {
+  width: 1.25rem;
+  height: 1.25rem;
+  accent-color: var(--ink);
+  cursor: pointer;
+}
+
+.ballot-info {
+  flex-grow: 1;
+}
+
+.ballot-candidate-header {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.ballot-candidate-name {
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.ballot-candidate-roll {
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.ballot-candidate-statement {
+  font-size: 0.95rem;
+  margin-top: 0.25rem;
+  white-space: pre-wrap;
+}
+
+/* Rubber Stamp Signature Element */
+.stamp-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1.5rem;
+  border: var(--border-double-width) double var(--ink);
+  margin: 2rem 0;
+  background-color: var(--paper);
+  position: relative;
+  overflow: hidden;
+}
+
+.stamp-seal {
+  width: 160px;
+  height: 160px;
+  color: var(--seal);
+  fill: none;
+  stroke: var(--seal);
+  stroke-width: 2.5;
+  transform: rotate(-12deg);
+  margin-bottom: 2rem;
+  animation: stamp-down 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes stamp-down {
+  0% {
+    opacity: 0;
+    transform: scale(3.5) rotate(15deg);
+  }
+  70% {
+    opacity: 0.9;
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(-12deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stamp-seal {
+    animation: none;
+    transform: rotate(-12deg);
+    opacity: 1;
+  }
+}
+
+.stamp-receipt-box {
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  border-top: var(--border-width) dashed var(--register);
+  padding-top: 1.5rem;
+  width: 100%;
+}
+
+.stamp-receipt-code {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 0.5rem;
+}
+
+/* Error/Notice Boxes */
+.notice-box {
+  border: var(--border-width) solid var(--ink);
+  background-color: var(--paper);
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.notice-box.error {
+  border-color: var(--error-border);
+  background-color: var(--error-bg);
+  color: var(--ink);
+}
+
+.notice-box.success {
+  border-color: var(--verified);
+  background-color: rgba(47, 75, 60, 0.05);
+}
+
+.notice-title {
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+/* Results / Winner Highlight */
+.winners-section {
+  margin-bottom: 2.5rem;
+}
+
+.winner-row {
+  display: flex;
+  align-items: center;
+  padding: 1.25rem 1rem;
+  border: 2px solid var(--seal);
+  background-color: rgba(140, 47, 27, 0.03);
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+.winner-seal-mark {
+  position: absolute;
+  right: 1.5rem;
+  top: 50%;
+  transform: translateY(-50%) rotate(8deg);
+  border: 2px solid var(--seal);
+  color: var(--seal);
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 0.2rem 0.5rem;
+  letter-spacing: 0.05em;
+}
+
+/* Admin Styling */
+.admin-config-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+@media (max-width: 500px) {
+  .admin-config-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.admin-stats-summary {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.admin-stat-card {
+  border: var(--border-width) solid var(--register);
+  padding: 1rem;
+}
+
+.admin-stat-num {
+  font-family: var(--font-mono);
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.admin-stat-label {
+  font-size: 0.8rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-top: 0.25rem;
+}
+
+.admin-section-title {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  border-bottom: 2px solid var(--ink);
+  padding-bottom: 0.25rem;
+}
+
+/* Time Series Simple Visualizer */
+.chart-container {
+  border: var(--border-width) solid var(--register);
+  padding: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+.chart-bar-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.chart-bar-label {
+  width: 120px;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  flex-shrink: 0;
+}
+
+.chart-bar-fill-wrapper {
+  flex-grow: 1;
+  background-color: var(--hover-bg);
+  height: 1.5rem;
+  position: relative;
+}
+
+.chart-bar-fill {
+  background-color: var(--ink);
+  height: 100%;
+}
+
+.chart-bar-fill.highlighted {
+  background-color: var(--seal);
+}
+
+.chart-bar-value {
+  position: absolute;
+  right: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 600;
+  mix-blend-mode: difference;
+  color: white;
+}
+
+/* File upload zone */
+.file-upload-zone {
+  border: var(--border-width) dashed var(--ink);
+  padding: 2rem 1.5rem;
+  text-align: center;
+  cursor: pointer;
+  background-color: var(--paper);
+  transition: background-color 0.15s ease;
+  margin-bottom: 1rem;
+}
+
+.file-upload-zone:hover {
+  background-color: var(--hover-bg);
+}
+
+.file-upload-input {
+  display: none;
+}
+
+/* Nav styles */
+nav.app-nav {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.25rem;
+}
+
+nav.app-nav a, nav.app-nav button {
+  text-decoration: none;
+  background-color: var(--paper);
+  border: var(--border-width) solid var(--ink);
+  color: var(--ink);
+  padding: 0.4rem 0.8rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  font-family: var(--font-sans);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  border-radius: var(--border-radius);
+}
+
+nav.app-nav a:hover, nav.app-nav button:hover {
+  background-color: var(--ink);
+  color: var(--paper);
+}
+
+/* Responsive adjustments for narrow/mobile screens */
+@media (max-width: 520px) {
+  .app-container {
+    margin: 0 auto;
+    padding: 2rem 1.25rem;
+    box-shadow: none;
+    min-height: 100vh;
+    border-top: none;
+    border-bottom: none;
+  }
+  .header-branding-container {
+    flex-direction: column !important;
+    text-align: center;
+    gap: 0.5rem !important;
+  }
+  .header-text-container {
+    text-align: center !important;
+  }
+  .app-branding {
+    font-size: 1.6rem !important;
+  }
+  .app-subbranding {
+    font-size: 0.7rem !important;
+    text-align: center;
+  }
+  nav.app-nav {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  nav.app-nav a, nav.app-nav button {
+    font-size: 0.75rem;
+    padding: 0.35rem 0.6rem;
+  }
+  .register-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  .register-badge {
+    width: auto;
+    margin-bottom: 0.1rem;
+  }
+  .register-content {
+    padding: 0;
+    width: 100%;
+  }
+  .register-action {
+    width: 100%;
+    text-align: left;
+    margin-top: 0.25rem;
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+}
+
+/* Screen readers helper */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+/* SVG Line Chart styling for votes over time */
+.line-chart-path {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 2;
+}
+
+.line-chart-grid {
+  stroke: var(--register);
+  stroke-width: 0.5;
+  stroke-dasharray: 2 2;
+}
+
+.line-chart-axis {
+  stroke: var(--ink);
+  stroke-width: 1;
+}
+
+.line-chart-text {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  fill: var(--muted);
+}
+
+/* Photo Thumbnail in Candidate Lists */
+.candidate-avatar {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border: 1px solid var(--ink);
+  flex-shrink: 0;
+}
+
+.candidate-row-with-photo {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.candidate-photo-preview {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border: 1px solid var(--ink);
+  margin-top: 0.5rem;
+}
+
+/* Print Stylesheet - Isolates ONLY the official stamp-container receipt card */
+@media print {
+  body {
+    background-color: #fff !important;
+    color: #000 !important;
+  }
+  body * {
+    visibility: hidden;
+  }
+  .app-container {
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: 100% !important;
+    background: transparent !important;
+  }
+  .stamp-container, .stamp-container * {
+    visibility: visible;
+  }
+  .stamp-container {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%) !important;
+    border: 2px double #000 !important;
+    box-shadow: none !important;
+    width: 100% !important;
+    max-width: 450px !important;
+    margin: 0 !important;
+    padding: 2rem !important;
+    background-color: #fff !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+}
