@@ -86,6 +86,7 @@ export const Admin: React.FC = () => {
   // Voter Audit Log (Only readable/visible to BT24CSE001)
   const [auditLog, setAuditLog] = useState<VoterAuditRecord[]>([]);
   const [loadingAudit, setLoadingAudit] = useState(false);
+  const [resetting, setResetting] = useState(false);
 
   useEffect(() => {
     if (!student) {
@@ -244,6 +245,33 @@ export const Admin: React.FC = () => {
       setError(err.message || 'Failed to update configuration.');
     } finally {
       setUpdatingConfig(false);
+    }
+  };
+
+  const handleResetElection = async () => {
+    const confirmReset = window.confirm(
+      "⚠️ WARNING: This will permanently delete all votes, all nominations, reset all voter statuses to 'Not Voted/Not Nominated', and unpublish results. This action CANNOT be undone.\n\nAre you sure you want to completely reset the election?"
+    );
+    if (!confirmReset) return;
+
+    setResetting(true);
+    setError(null);
+    setSuccess(null);
+
+    try {
+      const { error: resetErr } = await supabase.rpc('reset_election');
+      if (resetErr) throw resetErr;
+
+      setSuccess('The election has been successfully reset. All ballots and nominations have been cleared.');
+      
+      // Refresh context configs and dashboard statistics
+      await refreshConfig();
+      await loadAdminData();
+    } catch (err: any) {
+      console.error(err);
+      setError(err.message || 'Failed to reset election.');
+    } finally {
+      setResetting(false);
     }
   };
 
@@ -741,6 +769,23 @@ export const Admin: React.FC = () => {
             ))}
           </div>
         )}
+      </section>
+
+      {/* Danger Zone */}
+      <section style={{ marginBottom: '3rem', border: '1px solid var(--error-border)', padding: '1.5rem', backgroundColor: 'var(--error-bg)' }}>
+        <h3 className="admin-section-title" style={{ border: 'none', marginBottom: '0.5rem', color: 'var(--seal)' }}>
+          ⚠️ Danger Zone
+        </h3>
+        <p style={{ fontSize: '0.85rem', marginBottom: '1.25rem' }}>
+          Resetting the election will permanently clear all candidate nominations, delete all cast ballots, and reset all student voting metrics to a fresh state.
+        </p>
+        <button 
+          onClick={handleResetElection} 
+          className="btn btn-danger" 
+          disabled={resetting}
+        >
+          {resetting ? 'Resetting election...' : 'Reset Election Data'}
+        </button>
       </section>
 
       {/* Secure Voter Audit Log - STRICTLY BT24CSE001 ONLY */}
