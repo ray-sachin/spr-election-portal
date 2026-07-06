@@ -56,16 +56,30 @@ export const Nominate: React.FC = () => {
 
       if (fetchErr) throw fetchErr;
 
+      const savedDraft = localStorage.getItem(`nomination_draft_statement_${student.roll_no}`);
+
       if (data) {
         setNomination(data as NominationRecord);
-        setStatement(data.statement);
+        // If a local draft exists, prioritize it as the user's unsaved changes
+        setStatement(savedDraft !== null ? savedDraft : data.statement);
         setPhotoUrl(data.photo_url || '');
+      } else {
+        if (savedDraft) {
+          setStatement(savedDraft);
+        }
       }
     } catch (err: any) {
       console.error('Error fetching nomination:', err);
       setError('Could not retrieve nomination details.');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleStatementChange = (text: string) => {
+    setStatement(text);
+    if (student) {
+      localStorage.setItem(`nomination_draft_statement_${student.roll_no}`, text);
     }
   };
 
@@ -227,6 +241,9 @@ export const Nominate: React.FC = () => {
         setSuccess('Your nomination has been successfully recorded.');
       }
 
+      // Clear local draft cache on successful submission
+      localStorage.removeItem(`nomination_draft_statement_${student.roll_no}`);
+
       await refreshProfile();
       await fetchNomination();
     } catch (err: any) {
@@ -308,7 +325,7 @@ export const Nominate: React.FC = () => {
               placeholder="State your objectives, credentials, and vision for placement coordination in 600 characters or less."
               maxLength={maxChars}
               value={statement}
-              onChange={(e) => setStatement(e.target.value)}
+              onChange={(e) => handleStatementChange(e.target.value)}
               disabled={submitting}
               required
             />
