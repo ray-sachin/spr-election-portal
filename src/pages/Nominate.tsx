@@ -12,6 +12,8 @@ interface NominationRecord {
   photo_url: string | null;
   status: string;
   submitted_at: string;
+  rejection_count: number;
+  rejection_reason: string | null;
 }
 
 export const Nominate: React.FC = () => {
@@ -217,7 +219,8 @@ export const Nominate: React.FC = () => {
           .update({
             statement: statement.trim(),
             photo_url: photoUrl.trim() || null,
-            status: 'pending' // Revert to pending on edit
+            status: 'pending', // Revert to pending on edit
+            rejection_reason: null // Clear old rejection reason feedback
           })
           .eq('id', nomination.id);
 
@@ -277,7 +280,11 @@ export const Nominate: React.FC = () => {
     : false;
 
   const showForm = !nomination || isEditing;
-  const isLocked = nomination && (nomination.status !== 'pending' || !isWindowOpen);
+  const isLocked = nomination && (
+    nomination.status === 'approved' ||
+    (nomination.status === 'rejected' && nomination.rejection_count >= 3) ||
+    !isWindowOpen
+  );
 
   return (
     <div style={{ flexGrow: 1 }}>
@@ -303,6 +310,29 @@ export const Nominate: React.FC = () => {
         <div className="notice-box success" role="status">
           <div className="notice-title">Recorded</div>
           <p style={{ fontSize: '0.9rem' }}>{success}</p>
+        </div>
+      )}
+
+      {nomination && nomination.status === 'rejected' && (
+        <div className="notice-box error" style={{ marginBottom: '1.5rem' }}>
+          <div className="notice-title">Nomination Rejected (Attempt {nomination.rejection_count} of 3)</div>
+          <p style={{ fontSize: '0.9rem', marginBottom: '0.5rem' }}>
+            Your candidacy nomination has been rejected by the administrator.
+          </p>
+          {nomination.rejection_reason && (
+            <div style={{ marginTop: '0.5rem', padding: '0.5rem 0.75rem', borderLeft: '3px solid var(--error-border)', backgroundColor: 'rgba(235, 94, 85, 0.05)', fontSize: '0.9rem' }}>
+              <strong>Reason for Rejection:</strong> {nomination.rejection_reason}
+            </div>
+          )}
+          {nomination.rejection_count < 3 ? (
+            <p style={{ fontSize: '0.85rem', marginTop: '0.75rem', color: 'var(--ink)' }}>
+              You have <strong>{3 - nomination.rejection_count}</strong> chances remaining to correct and re-submit your statement.
+            </p>
+          ) : (
+            <p style={{ fontSize: '0.85rem', marginTop: '0.75rem', fontWeight: 'bold', color: 'var(--seal)' }}>
+              You have reached the maximum limit of 3 rejections and are barred from submitting further candidacies.
+            </p>
+          )}
         </div>
       )}
 
@@ -438,7 +468,7 @@ export const Nominate: React.FC = () => {
                 Submitted: <span className="mono-data">{new Date(nomination.submitted_at).toLocaleString()}</span>
               </span>
 
-              {isWindowOpen && nomination.status === 'pending' ? (
+              {isWindowOpen && (nomination.status === 'pending' || (nomination.status === 'rejected' && nomination.rejection_count < 3)) ? (
                 <button className="btn" onClick={() => setIsEditing(true)}>
                   Edit Statement
                 </button>

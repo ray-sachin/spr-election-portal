@@ -12,6 +12,7 @@ interface PendingNomination {
   photo_url: string | null;
   status: string;
   submitted_at: string;
+  rejection_count: number;
   students: {
     name: string;
   };
@@ -174,6 +175,7 @@ export const Admin: React.FC = () => {
         photo_url,
         status,
         submitted_at,
+        rejection_count,
         students!nominations_candidate_roll_no_fkey ( name )
       `)
       .eq('status', 'pending');
@@ -278,14 +280,30 @@ export const Admin: React.FC = () => {
   const handleReviewNomination = async (id: string, newStatus: 'approved' | 'rejected') => {
     setError(null);
     setSuccess(null);
+
+    let reason: string | null = null;
+    if (newStatus === 'rejected') {
+      reason = window.prompt("Optional: Enter a brief reason for rejecting this nomination:");
+      if (reason === null) {
+        return; // Admin clicked Cancel on prompt
+      }
+    }
+
     setReviewingId(id);
 
     try {
+      const nomination = pendingNominations.find(n => n.id === id);
+      const currentRejectionCount = nomination ? nomination.rejection_count : 0;
+
       const { error: reviewErr } = await supabase
         .from('nominations')
         .update({
           status: newStatus,
-          reviewed_at: new Date().toISOString()
+          reviewed_at: new Date().toISOString(),
+          rejection_reason: newStatus === 'rejected' && reason ? reason.trim() || null : null,
+          rejection_count: newStatus === 'rejected' 
+            ? currentRejectionCount + 1 
+            : currentRejectionCount
         })
         .eq('id', id);
 
